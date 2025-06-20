@@ -1,6 +1,6 @@
 % Includes the PLS analysis for figures in main text, as well as the
 % analysis of the full model provided in Supplementary
-
+addpath(genpath('/Users/sorenza_bastiaens/Documents/MATLAB/PLS'))
 %% Empirical data formatting for PLS
 data = readtable('combined_data.csv'); % in Data folder
 freq_shape = reshape(data.freq, 202,608)';
@@ -28,8 +28,6 @@ list_table = table(list_names, 'VariableNames', {'participant_id'});
 ages(~isnan(idx_list_table_in_participant_info)) = participant_info.age(idx_list_table_in_participant_info(~isnan(idx_list_table_in_participant_info)));
 list_table.age = ages';
 
-
-% Formatting for PLS for alpha frequency against age with 200 cortical ROIs
 cell_freq = {freq_cleaned(:, 1:200)};
 cell_power = {power_cleaned(:, 1:200)};
 cell_high = {high_cleaned(:, 1:200)};
@@ -40,21 +38,21 @@ option.stacked_behavdata = ages';
 option.num_boot = 1000;
 option.num_perm = 1000;
 
-% PLS for frequency
-result_freq = pls_analysis(cell_freq, 607, 1, option);
-result_power = pls_analysis(cell_power, 607,1, option);
-result_high = pls_analysis(cell_high, 607,1, option);
-result_low = pls_analysis(cell_low, 607,1, option);
+% PLS analysis
+result_freq = pls_analysis(cell_freq, length(list_names), 1, option);
+result_power = pls_analysis(cell_power, length(list_names),1, option);
+result_high = pls_analysis(cell_high, length(list_names),1, option);
+result_low = pls_analysis(cell_low, length(list_names),1, option);
 load('ROI_coord.mat')
 ROI_coord = ROI_coord(1:200);
-% Plot the first scatter plot in the first subplot
+% Plot for frequency
 subplot(1, 4, 1);
 scatter(ROI_coord, result_freq.boot_result.compare_u);
 title('PLS frequency - age: compare u');
 xlabel('ROI coordinate');
 ylabel('Boot strap u result');
 
-% Plot the second scatter plot in the second subplot
+% Plot for power
 subplot(1, 4, 2);
 scatter(ROI_coord, result_power.boot_result.compare_u);
 title('PLS power - age: compare u');
@@ -62,14 +60,14 @@ xlabel('ROI coordinate');
 ylabel('Boot strap u result');
 
 
-% Plot the third scatter plot in the third subplot
+% Plot for high exponent
 subplot(1, 4, 3);
 scatter(ROI_coord, result_high.boot_result.compare_u);
 title('PLS high exponent - age: compare u');
 xlabel('ROI coordinate');
 ylabel('Boot strap u result');
 
-% Plot the fourth scatter plot in the fourth subplot
+% Plot for low exponent
 subplot(1, 4, 4);
 scatter(ROI_coord, result_low.boot_result.compare_u);
 title('PLS low exponent - age: compare u');
@@ -88,7 +86,6 @@ x_cleaned = x_shape(~rows_with_nan, :);
 y_cleaned = y_shape(~rows_with_nan, :);
 z_cleaned = z_shape(~rows_with_nan, :);
 
-% Formatting for PLS for alpha frequency against age
 cell_x = {x_cleaned(:, 1:200)};
 cell_y = {y_cleaned(:, 1:200)};
 cell_z = {z_cleaned(:, 1:200)};
@@ -99,9 +96,9 @@ option.num_boot = 1000;%500;
 option.num_perm = 1000;
 
 % PLS for frequency
-result_x = pls_analysis(cell_x, 607, 1, option);
-result_y = pls_analysis(cell_y, 607,1, option);
-result_z = pls_analysis(cell_z, 607,1, option);
+result_x = pls_analysis(cell_x, length(list_names), 1, option);
+result_y = pls_analysis(cell_y, length(list_names),1, option);
+result_z = pls_analysis(cell_z, length(list_names),1, option);
 
 % Plot the first scatter plot in the first subplot
 figure
@@ -133,7 +130,6 @@ rows_with_nan = any(isnan(freq_shape), 2); % For consistency with empirical
 
 t0_cleaned = t0_shape(~rows_with_nan, :);
 
-% Formatting for PLS for alpha frequency against age
 cell_t0 = {t0_cleaned(:, 1:200)};
 
 option.method = 3;
@@ -142,7 +138,7 @@ option.num_boot = 1000;%500;
 option.num_perm = 1000;
 
 % PLS for frequency
-result_t0 = pls_analysis(cell_t0, 607, 1, option);
+result_t0 = pls_analysis(cell_t0, length(list_names), 1, option);
 
 % Plot the first scatter plot in the first subplot
 figure
@@ -158,14 +154,13 @@ Gese_shape = reshape(data.Gese, 202,608)';
 Gesre_shape = reshape(data.Gesre, 202,608)';
 Gsrs_shape = reshape(data.Gsrs, 202,608)';
 
-rows_with_nan = any(isnan(freq_shape), 2); %!! For consistency with empirical
+rows_with_nan = any(isnan(freq_shape), 2); % For consistency with empirical
 
 Gee_cleaned = Gee_shape(~rows_with_nan, :);
 Gei_cleaned = Gei_shape(~rows_with_nan, :);
 Gese_cleaned = Gese_shape(~rows_with_nan, :);
 Gesre_cleaned = Gesre_shape(~rows_with_nan, :);
 Gsrs_cleaned = Gsrs_shape(~rows_with_nan, :);
-% Formatting for PLS for alpha frequency against age
 cell_Gee = {Gee_cleaned(:, 1:200)};
 cell_Gei = {Gei_cleaned(:, 1:200)};
 cell_Gese = {Gese_cleaned(:, 1:200)};
@@ -178,11 +173,11 @@ option.num_boot = 1000;%500;
 option.num_perm = 1000;
 
 % PLS for frequency
-result_Gee = pls_analysis(cell_Gee, 607, 1, option);
-result_Gei = pls_analysis(cell_Gei, 607, 1, option);
-result_Gese = pls_analysis(cell_Gese, 607, 1, option);
-result_Gesre = pls_analysis(cell_Gesre, 607, 1, option);
-result_Gsrs = pls_analysis(cell_Gsrs, 607, 1, option);
+result_Gee = pls_analysis(cell_Gee, length(list_names), 1, option);
+result_Gei = pls_analysis(cell_Gei, length(list_names), 1, option);
+result_Gese = pls_analysis(cell_Gese, length(list_names), 1, option);
+result_Gesre = pls_analysis(cell_Gesre, length(list_names), 1, option);
+result_Gsrs = pls_analysis(cell_Gsrs, length(list_names), 1, option);
 
 % Plot the first scatter plot in the first subplot
 figure
@@ -235,8 +230,8 @@ option.num_boot = 1000;%500;
 option.num_perm = 1000;
 
 % PLS for frequency
-result_alpha = pls_analysis(cell_alpha, 607, 1, option);
-result_beta = pls_analysis(cell_beta, 607, 1, option);
+result_alpha = pls_analysis(cell_alpha, length(list_names), 1, option);
+result_beta = pls_analysis(cell_beta, length(list_names), 1, option);
 
 % Plot the first scatter plot in the first subplot
 figure
@@ -270,7 +265,7 @@ option.num_perm = 1000;
 
 cell_feature = {[freq_cleaned(:, 1:200); power_cleaned(:, 1:200); high_cleaned(:, 1:200); low_cleaned(:, 1:200)]};
 % PLS for frequency
-result_feature = pls_analysis(cell_feature, 607, 4, option);
+result_feature = pls_analysis(cell_feature, length(list_names), 4, option);
 figure, scatter(ROI_coord, result_feature.boot_result.compare_u(:,1))
 figure, scatter(ROI_coord, result_feature.boot_result.compare_u(:,2))
 
@@ -282,7 +277,7 @@ option.num_perm = 1000;
 
 cell_modelling = {[x_cleaned(:, 1:200); y_cleaned(:, 1:200); z_cleaned(:, 1:200); t0_cleaned(:, 1:200)]};
 % PLS for frequency
-result_modelling = pls_analysis(cell_modelling, 607, 4, option);
+result_modelling = pls_analysis(cell_modelling, length(list_names), 4, option);
 figure, scatter(ROI_coord, result_modelling.boot_result.compare_u(:,1))
 figure, scatter(ROI_coord, result_modelling.boot_result.compare_u(:,2))
 

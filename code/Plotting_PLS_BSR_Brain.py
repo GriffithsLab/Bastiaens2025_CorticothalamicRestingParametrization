@@ -14,7 +14,7 @@ subject = 'fsaverage_small'
 os.environ['SUBJECTS_DIR'] = subjects_dir
 
 # Load MATLAB ROI coordinate file
-mat = loadmat('/external/rprshnas01/netdata_kcni/jglab/MemberSpaces/sb/CAM-can_data/Scinet_files/saved_results/ROI_coord.mat')
+mat = loadmat('/path_to_data/ROI_coord.mat')
 coordinates = mat['ROI_coord'][0]
 
 # Load PLS results
@@ -22,6 +22,70 @@ pls_empirical = pd.read_csv('/data/bootstrap_empirical.csv')
 pls_modelling = pd.read_csv('/data/bootstrap_xyzt0.csv')
 pls_modelling_1 = pd.read_csv('/data/bootstrap_Gsalpha.csv')
 pls_feature_modelling = pd.read_csv('/data/bootstrap_featuremodelling.csv')
+
+# Plotting bootrsap ratios over MNI y axis
+
+
+labels = mne.read_labels_from_annot(
+    subject='fsaverage_small',
+    parc="Schaefer2018_200Parcels_17Networks_order",
+    subjects_dir=subjects_dir,
+    verbose=False
+)
+
+label_names = [label.name for label in labels]
+
+network_info = {
+    'Cont': {'color': labels[1].color, 'x': [], 'y': []},
+    'Default': {'color': labels[29].color, 'x': [], 'y': []},
+    'DorsAttn': {'color': labels[43].color, 'x': [], 'y': []},
+    'Limbic': {'color': labels[54].color, 'x': [], 'y': []},
+    'SalVentAttn': {'color': labels[60].color, 'x': [], 'y': []},
+    'SomMo': {'color': labels[71].color, 'x': [], 'y': []},
+    'TempPar': {'color': labels[185].color, 'x': [], 'y': []},
+    'Vis': {'color': labels[90].color, 'x': [], 'y': []},
+}
+
+def plot_pls_latent_maps(pls_df, latent_vars, coordinates, title_prefix=""):
+    fig, axs = plt.subplots(1, len(latent_vars), figsize=(4 * len(latent_vars), 4))
+
+    for i, ax in enumerate(axs.flat):
+        y_coord = pls_df[latent_vars[i]]
+
+        # Clear previous values
+        for net in network_info:
+            network_info[net]['x'] = []
+            network_info[net]['y'] = []
+
+        # Collect points per network
+        for idx, name in enumerate(label_names):
+            for net in network_info:
+                if net in name:
+                    network_info[net]['x'].append(coordinates[idx])
+                    network_info[net]['y'].append(y_coord[idx])
+                    break
+
+        # Plot
+        for net, info in network_info.items():
+            if info['x']:
+                ax.scatter(info['x'], info['y'], color=info['color'], label=net)
+
+        ax.set_xlabel('MNI y', fontsize=14)
+        ax.set_title(f'{title_prefix}{latent_vars[i]}', fontsize=16)
+        ax.tick_params(axis='both', which='major', labelsize=12)
+        if i == 0:
+            ax.set_ylabel('Bootstrap u', fontsize=14)
+
+    plt.tight_layout()
+    plt.show()
+
+# Plot for each PLS types
+plot_pls_latent_maps(pls_empirical, ['freq', 'power', 'high', 'low'], coordinates, title_prefix='Empirical - ')
+plot_pls_latent_maps(pls_modelling, ['x', 'y', 'z', 't0'], coordinates, title_prefix='Modelling - ')
+plot_pls_latent_maps(pls_feature_modelling, ['feature_1', 'feature_2', 'modelling_1', 'modelling_2'], coordinates, title_prefix='Feature - ')
+
+
+
 
 # Plotting bootstrap ratios on brain of PLS
 
@@ -64,9 +128,6 @@ def plot_pls_bsr_on_brain(pls_df, latent_vars, roi_to_vertices, fsaverage, bg_ma
         plt.show()
 
 
-# Define labels
-labels =  mne.read_labels_from_annot(
-        subject='fsaverage_small', parc="Schaefer2018_200Parcels_17Networks_order", subjects_dir=subjects_dir, verbose=False)
 # Get vertices from ROIs 
 roi_to_vertices = [label.vertices for label in labels[:-2]]
 
