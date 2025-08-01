@@ -34,19 +34,7 @@ for i in range(0,len(labels)-2):
         y_avg_coord[i] = rh_coordinates[:, 1].mean()
 
 
-combined_data = pd.read_csv('/path_to_data/combined_data.csv')
-combined_data_trimmed = combined_data.groupby('Subject', group_keys=False).apply(lambda x: x.iloc[:-2]) # Cortical 200 ROIs
-
-# Read participant information
-participant_info = pd.read_csv('/path_to_info_age/participants.tsv', sep='\t', usecols=['participant_id', 'age'])
-participant_info['participant_id'] = participant_info['participant_id'].str.replace('sub-', '')
-
-
-merged_data = pd.merge(combined_data_trimmed, participant_info, left_on='Subject', right_on='participant_id', how='inner')
-# Create age groups
-bins = [18, 28, 38, 48, 58, 68, 78, 89]  # Define the boundaries for the age groups
-age_labels = ['18-27', '28-37', '38-47', '48-57', '58-67', '68-77', '78-88']  # Define the labels for the age groups
-merged_data['age_group'] = pd.cut(merged_data['age'], bins=bins, labels=age_labels, right=False)
+df = pd.read_csv('/path_to_data/combined_data_final.csv')
 
 plt.rcParams.update({'font.size': 16})  # Global font size
 
