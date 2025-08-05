@@ -1,6 +1,6 @@
 
 %% Empirical data formatting for PLS
-data = readtable('combined_data_final.csv'); % in Paper_2/Data
+data = readtable('combined_data_final.csv');
 
 % Getting subject age
 [~, idx] = unique(data.participant_id);  % indices of first occurrence

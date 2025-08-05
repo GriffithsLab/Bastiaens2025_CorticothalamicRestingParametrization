@@ -9,23 +9,20 @@ from nilearn import plotting
 from nilearn import surface
 from nilearn.datasets import fetch_surf_fsaverage
 
-subjects_dir = '/path_to_folder/freesurfer_subjects'
+subjects_dir = '/path_to_freesurfer/freesurfer_subjects'
 subject = 'fsaverage_small'
 os.environ['SUBJECTS_DIR'] = subjects_dir
 
 # Load MATLAB ROI coordinate file
-mat = loadmat('/path_to_data/ROI_coord.mat')
+mat = loadmat('/data/ROI_coord.mat')
 coordinates = mat['ROI_coord'][0]
 
 # Load PLS results
-pls_empirical = pd.read_csv('/data/bootstrap_empirical.csv')
-pls_modelling = pd.read_csv('/data/bootstrap_xyzt0.csv')
-pls_modelling_1 = pd.read_csv('/data/bootstrap_Gsalpha.csv')
-pls_feature_modelling = pd.read_csv('/data/bootstrap_featuremodelling.csv')
+pls_empirical = pd.read_csv('/data/bootstrap_empirical_final.csv')
+pls_modelling = pd.read_csv('/data/bootstrap_xyzt0_final.csv')
+pls_feature_modelling = pd.read_csv('/data/bootstrap_featuremodelling_final.csv')
 
 # Plotting bootrsap ratios over MNI y axis
-
-
 labels = mne.read_labels_from_annot(
     subject='fsaverage_small',
     parc="Schaefer2018_200Parcels_17Networks_order",
@@ -90,7 +87,7 @@ plot_pls_latent_maps(pls_feature_modelling, ['feature_1', 'feature_2', 'modellin
 # Plotting bootstrap ratios on brain of PLS
 
 # Get white surface
-fsaverage_directory = '/path_to_folder/freesurfer_subjects/fsaverage_small/'
+fsaverage_directory = '/path_to_freesurfer/freesurfer_subjects/fsaverage_small/'
 fsaverage = {
     'white_left': fsaverage_directory + 'surf/lh.white',
     'white_right': fsaverage_directory + 'surf/rh.white',

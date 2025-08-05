@@ -34,13 +34,12 @@ for i in range(0,len(labels)-2):
         y_avg_coord[i] = rh_coordinates[:, 1].mean()
 
 
-df = pd.read_csv('/path_to_data/combined_data_final.csv')
+df = pd.read_csv('/data/combined_data_final.csv')
 
 plt.rcParams.update({'font.size': 16})  # Global font size
 
 # Define parameter list
 parameters = ['freq', 'power', 'high_exp','low_exp','x', 'y', 'z', 't0']
-df = merged_data.dropna(subset=parameters + ['participant_id', 'age'])
 
 # Group by age_group
 age_groups = df.groupby('age_group')
@@ -96,7 +95,7 @@ plt.show()
 
 
 # Plotting average spatial gradient (across all age groups) on brain surface for visualization
-fsaverage_directory = '/path_directly_to_fsaverage/freesurfer_subjects/fsaverage_small/'
+fsaverage_directory = '/path_to_freesurfer/freesurfer_subjects/fsaverage_small/'
 fsaverage = {
     'white_left': fsaverage_directory + 'surf/lh.white',
     'white_right': fsaverage_directory + 'surf/rh.white',

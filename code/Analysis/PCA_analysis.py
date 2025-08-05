@@ -9,15 +9,11 @@ from sklearn.decomposition import PCA
 import seaborn as sns
 
 # Load in combined data file with empirical and modelling results
-combined_data = pd.read_csv('/data/combined_data.csv') # Change to path of combined_data file
-
-# Only keep results from the 200 cortical ROIs
-combined_data_trimmed = combined_data.groupby('Subject', group_keys=False).apply(lambda x: x.iloc[:-2])
-len(combined_data_trimmed)
+combined_data = pd.read_csv('/data/combined_data_final.csv') # Change to path of combined_data file
 
 # For plotting over back-front of head, estimation of average MNI y coordinate for each ROIs
 # Load Shaefer 200 Parcels labels and source space data
-subjects_dir = 'path_to_freesurfer_MRI/freesurfer_subjects'
+subjects_dir = 'path_to_freesurfer/freesurfer_subjects'
 subject = 'fsaverage_small'
 os.environ['SUBJECTS_DIR'] = subjects_dir 
 

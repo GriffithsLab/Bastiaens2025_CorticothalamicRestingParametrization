@@ -7,7 +7,7 @@ from scipy import io
 from scipy.stats import pearsonr
 import seaborn as sns
 
-combined_data = pd.read_csv('/Data/combined_data_final.csv')
+combined_data = pd.read_csv('/data/combined_data_final.csv')
 data = combined_data[['x', 'y', 'z', 'Gee', 'Gei', 'Gese', 'Gesre', 'Gsrs', 'alpha', 'beta',
        't0', 'power', 'freq', 'low_exp', 'high_exp']]
 correlation_matrix = data.corr(method='pearson')
