@@ -11,3 +11,12 @@ This repository contains the full code for the preprocessing, analyses, and resu
 - ```data```: Contains .csv file with the averaged empirical features and modelling parameters for the 200 ROIs in order to run the files contained in the notebooks folder, and the bootstrap ratio values from the behavioural PLS analyses conducted in MATLAB.
 
 ## Files
+
+
+## Requirements
+
+Model fitting:
+- Set up of BrainTrak is required: MCMC model fitting algorithm implemented on MATLAB is available at https://github.com/BrainDynamicsUSYD/braintrak.
+
+Source reconstruction and brain visualization:
+- Install FreeSurfer: Download and installation instruction are provded at https://surfer.nmr.mgh.harvard.edu/fswiki/DownloadAndInstall
