@@ -6,24 +6,15 @@ import patsy
 import statsmodels.formula.api as smf
 from scipy.io import loadmat
 
-# Prepare data for MLM analysis 
 # Load in data and keep 200 ROI results
-combined_data = combined_data = pd.read_csv('/path_to_data/combined_data.csv')
-combined_data = combined_data.groupby('Subject', group_keys=False).apply(lambda x: x.iloc[:-2])
-
-# Get participant age
-participant_info = pd.read_csv('/path_to_data/participants.tsv', sep='\t', usecols=['participant_id', 'age'])
-participant_info['participant_id'] = participant_info['participant_id'].str.replace('sub-', '')
-
-merged_data = pd.merge(combined_data, participant_info, left_on='Subject', right_on='participant_id', how='inner')
+combined_data = combined_data = pd.read_csv('/data/combined_data_final.csv')
 
 # Get coordinates of ROIs and add it to the dataframe 
-mat = loadmat('/path_to_data/ROI_coord.mat')
+mat = loadmat('/data/ROI_coord.mat')
 regions = mat['ROI_coord'][0]
 repeated_regions = np.tile(regions[:-2],(len(combined_data)//len(regions[:-2])))
-merged_data['region'] = repeated_regions
-df = merged_data.dropna(subset=['x', 'y', 'z', 't0', 'power', 'freq', 'low_exp', 'high_exp', 'participant_id', 'age', 'region'])
-
+combined_data['region'] = repeated_regions
+df = combined_data
 
 # Run MLM analysis
 # Define the mixed model formula
